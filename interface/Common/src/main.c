@@ -37,6 +37,8 @@
 #include "read_uid.h"
 #endif
 
+#include "DAP.h"
+
 #if defined(BOARD_LPC1549) || defined(BOARD_LPC11U68) || defined(BOARD_LPC4337)
     #define USE_USB_EJECT_INSERT
 #endif
@@ -199,7 +201,8 @@ void main_disable_debug_event(void) {
 
 #define SIZE_DATA (64)
 os_mbx_declare(serial_mailbox, 20);
-
+uint8_t tx_buf[64];
+uint8_t rx_buf[64];
 __task void serial_process() {
     uint8_t data[SIZE_DATA];
     int32_t len_data = 0;
@@ -234,23 +237,12 @@ __task void serial_process() {
             }
         }
 
-        len_data = USBD_CDC_ACM_DataFree();
-        if (len_data > SIZE_DATA)
-            len_data = SIZE_DATA;
-        if (len_data)
-            len_data = uart_read_data(data, len_data);
+        len_data = 64;
+        len_data = USBD_CDC_ACM_DataRead(rx_buf, len_data);
         if (len_data) {
-            if(USBD_CDC_ACM_DataSend(data , len_data))
-                main_blink_cdc_led(0);
-        }
-
-        len_data = uart_write_free();
-        if (len_data > SIZE_DATA)
-            len_data = SIZE_DATA;
-        if (len_data)
-            len_data = USBD_CDC_ACM_DataRead(data, len_data);
-        if (len_data) {
-            if (uart_write_data(data, len_data))
+            memset(tx_buf, sizeof(tx_buf), 0);
+            DAP_ProcessCommand(rx_buf, tx_buf);
+            if(USBD_CDC_ACM_DataSend(tx_buf, sizeof(tx_buf)))
                 main_blink_cdc_led(0);
         }
     }

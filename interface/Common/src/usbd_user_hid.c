@@ -127,7 +127,7 @@ void usbd_hid_process (void) {
     // Process pending requests
     while ((USB_RequestOut != USB_RequestIn) || USB_RequestFlag) {
         // Process DAP Command and prepare response
-        DAP_ProcessCommand(USB_Request[USB_RequestOut], USB_Response[USB_ResponseIn]);
+//        DAP_ProcessCommand(USB_Request[USB_RequestOut], USB_Response[USB_ResponseIn]);
 
         // Update request index and flag
         USB_RequestOut = (USB_RequestOut +1) % DAP_PACKET_COUNT;
