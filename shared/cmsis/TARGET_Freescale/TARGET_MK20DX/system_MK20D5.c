@@ -195,7 +195,7 @@ void SystemInit (void) {
 #if defined(OFFSET_VTABLE_32K)
   SCB->VTOR = 0x8000u;
 #elif defined(OFFSET_VTABLE_20K)
-  SCB->VTOR = 0x5000u;
+  SCB->VTOR = 0x8000u;
 #endif
 }
 

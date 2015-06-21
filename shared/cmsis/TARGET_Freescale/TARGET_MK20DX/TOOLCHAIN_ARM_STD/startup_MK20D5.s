@@ -457,7 +457,7 @@ FSEC            EQU     0xFE
                 IF      :DEF:OPENSDA_BOOTLOADER
                 AREA    |.ARM.__at_0x8400|, CODE, READONLY
                 ELIF    :DEF:MBED_BOOTLOADER
-                AREA    |.ARM.__at_0x5400|, CODE, READONLY
+                AREA    |.ARM.__at_0x8400|, CODE, READONLY
                 ELSE
                 AREA    |.ARM.__at_0x400 |, CODE, READONLY
                 ENDIF
